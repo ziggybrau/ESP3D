@@ -30,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: esp3d-bin-file
-          path: .pio/build/esp8266/firmware.bin
+          path: .pioenvs/esp8266/firmware.bin
