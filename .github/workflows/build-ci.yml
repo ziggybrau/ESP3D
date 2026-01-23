@@ -18,17 +18,11 @@ jobs:
         run: bash ./.github/ci/install-platformio.sh
       - name: Install ESP8266
         run: bash ./.github/ci/install-esp8266.sh
-      - name: Install ESP32
-        run: bash ./.github/ci/install-esp32.sh
       - name: Setup libraries
         run: bash ./.github/ci/prepare-libs.sh
       - name: Build ESP8266 arduino
         id: esp8266_1
         run: bash ./.github/ci/build-esp3d.sh esp8266 arduino
-        continue-on-error: true
-      - name: Build ESP32 arduino
-        id: esp32_1
-        run: bash ./.github/ci/build-esp3d.sh esp32 arduino
         continue-on-error: true
       - name: Build platformIO
         id: pio_1
@@ -38,10 +32,15 @@ jobs:
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        if: steps.esp8266_1.outcome == 'failure' || steps.esp32_1.outcome == 'failure'
+        if: steps.esp8266_1.outcome == 'failure'
         run: bash ./.github/ci/final-check.sh "$GITHUB_RUN_ID" "failure"
       - name: Final confirmation
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        if: steps.esp8266_1.outcome == 'success' && steps.esp32_1.outcome == 'success'
+        if: steps.esp8266_1.outcome == 'success'
         run: bash ./.github/ci/final-check.sh "$GITHUB_RUN_ID" "success"
+        - name: Upload Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp3d-bin-file
+          path: .pio/build/esp8266/firmware.bin
