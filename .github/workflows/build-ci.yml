@@ -23,12 +23,10 @@ jobs:
       - name: Build ESP8266 arduino
         id: esp8266_1
         run: bash ./.github/ci/build-esp3d.sh esp8266 arduino
-        continue-on-error: true
       - name: Build platformIO
         id: pio_1
         run: bash ./.github/ci/build-esp3d.sh esp32 pio
-        continue-on-error: true
-        - name: Upload Build
+      - name: Upload Build
         uses: actions/upload-artifact@v4
         with:
           name: esp3d-bin-file
