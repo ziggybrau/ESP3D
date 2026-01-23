@@ -28,17 +28,6 @@ jobs:
         id: pio_1
         run: bash ./.github/ci/build-esp3d.sh esp32 pio
         continue-on-error: true
-      - name: Final check
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        if: steps.esp8266_1.outcome == 'failure'
-        run: bash ./.github/ci/final-check.sh "$GITHUB_RUN_ID" "failure"
-      - name: Final confirmation
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        if: steps.esp8266_1.outcome == 'success'
-        run: bash ./.github/ci/final-check.sh "$GITHUB_RUN_ID" "success"
         - name: Upload Build
         uses: actions/upload-artifact@v4
         with:
